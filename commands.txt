@@ -1,0 +1,15 @@
+docker build -f Dockerfile -t pyapp .
+docker run -it pyapp
+
+docker build -f Dockerfile -t msvajgl/ai-py-app:latest .
+docker push
+
+docker run -it -p 3000:8000 pyapp
+
+docker compose up --build
+
+docker compose run app /bin/bash
+
+echo "hello" > index.html
+
+docker compose down -v
