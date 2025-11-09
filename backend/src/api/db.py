@@ -8,6 +8,8 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 if not DATABASE_URL:
     raise NotImplementedError("DATABASE_URL is not set")
 
+DATABASE_URL = DATABASE_URL.replace("postgress://", "postgres+psycopg://")
+
 def wait_for_db(url, retries=10, delay=3):
     """Wait for the PostgreSQL database to be ready before connecting."""
     engine = create_engine(url)
