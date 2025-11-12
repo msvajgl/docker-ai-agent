@@ -10,6 +10,7 @@ services:
     environment: 
       - PORT=8000
       - MY_PROJECT=Hello World
+      - OPENAI_JINJA=1
     env_file:
       - .env
     volumes:

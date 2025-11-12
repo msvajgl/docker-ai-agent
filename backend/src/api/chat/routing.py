@@ -2,9 +2,10 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 from .models import ChatMessagePayload, ChatMessage, ChatMessageListItem
+from api.ai.agents import get_supervisor
 from api.db import get_session
 from api.ai.services import generate_email_message
-from api.ai.schemas import EmailMessageSchema
+from api.ai.schemas import EmailMessageSchema, SuperVisorMessageSchema
 
 router = APIRouter()
 
@@ -21,8 +22,9 @@ def chat_list_messages(session: Session = Depends(get_session)):
 
 # curl -X POST http://127.0.0.1:8080/api/chats/ -H "Content-Type: application/json" -d '{"message": "hello world"}'
 # curl -X POST http://127.0.0.1:8080/api/chats/ -H "Content-Type: application/json" -d '{"message": "Give me the summary, why its good to go outside"}'
+# curl -X POST https://docker-ai-agent-956hp.ondigitalocean.app/api/chats/ -H "Content-Type: application/json" -d '{"message": "Give me the summary, why its good to go outside"}'
 
-@router.post("/", response_model=EmailMessageSchema)
+@router.post("/", response_model=SuperVisorMessageSchema)
 def chat_create_message(
     payload: ChatMessagePayload,
     session: Session = Depends(get_session)
@@ -33,5 +35,13 @@ def chat_create_message(
     session.add(obj)
     session.commit()
     #session.refresh(obj)
-    response = generate_email_message(payload.message)
+    #response = generate_email_message(payload.message)
+    supe = get_supervisor()
+    msg_data = {
+        "messages": [
+            {"role": "user",
+            "content": f"{payload.message}"},
+
+        ]
+    }
     return response

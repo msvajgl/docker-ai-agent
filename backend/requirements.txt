@@ -3,5 +3,7 @@ uvicorn[standard]
 requests
 sqlmodel
 psycopg2-binary
+langgraph
+langgraph-supervisor
 langchain
 langchain-openai
